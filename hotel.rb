@@ -1,7 +1,7 @@
+$selected_hotel=[]
 class Hotel
     @@no_of_hotels=0
     @@hotels=[]
-
 def total_no_of_hotels()
   puts "Total number of Hotels: #{@@no_of_hotels}" 
 end
@@ -60,7 +60,8 @@ def list_hotels()
   puts "\n\nList of all hotels:"
 
   @@hotels.each do |hotel|
-    puts "\nHotel Name: #{hotel[:hotel_name]}"
+    puts "\nHotel Id: #{hotel[:hotel_id]}"
+    puts "Hotel Name: #{hotel[:hotel_name]}"
     puts "Hotel Address: #{hotel[:hotel_address]}"
     puts "Hotel Phone Number: #{hotel[:hotel_phoneno]}"
     puts "Hotel Starrating: #{hotel[:hotel_starrating]}"
@@ -107,11 +108,11 @@ def select_hotel()
   print "Enter the ID of the hotel to select: "
   hotel_id = gets.chomp
 
-  selected_hotel = @@hotels.find { |hotel| hotel[:hotel_id] == hotel_id }
+  $selected_hotel = @@hotels.find { |hotel| hotel[:hotel_id] == hotel_id }
 
-  if selected_hotel != nil
+  if $selected_hotel != nil
     puts "\n\nSelected hotel:"
-    hotel_details(selected_hotel)
+    hotel_details($selected_hotel)
   else
     puts "\n\nNo hotel found with ID #{hotel_id}."
   end
@@ -144,6 +145,7 @@ def start(object1)
       object1.delete_hotel
     when 6
       object1.select_hotel
+      break
     when 7
       break
     else

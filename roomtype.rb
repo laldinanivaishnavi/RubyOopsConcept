@@ -1,120 +1,143 @@
+require './hotel.rb'
+$selected_room_type=[]
 class Roomtype
-  @@room_types = []
-  @@no_of_room_types=0
+    @@no_of_room_types=0
+    @@room_types=[]
 
-  def initialize(type, no, price, img, description, facilities)
-    @room_type = type
-    @room_no = no
-    @room_price = price
-    @room_img = img
-    @room_desc = description
-    @room_facilities = facilities
-  end
+def total_no_of_room_types()
+  puts "Total number of Room Types: #{@@no_of_room_types}" 
+end
 
-  def roomtype_details()
-    puts "Room Type - #@room_type"
-    puts "Room Number - #@room_no"
-    puts "Room Price - #@room_price"
-    puts "Room Image - #@room_img"
-    puts "Room Description - #@room_desc"
-    puts "Room Facilities - #@room_facilities"
-  end
+def room_type_details(roomtype)
+  puts "\n\n#{roomtype[:room_type_id]} is in our list:"
+  puts "Room Type Id - #{roomtype[:room_type_id]}"
+  puts "Hotel Id: #{roomtype[:hotel_id]}"
+  puts "Room Image - #{roomtype[:room_img]}"
+  puts "Room Description - #{roomtype[:room_desc]}"
+  puts "Room Facilites - #{roomtype[:room_facilities]}"   
+end
+def add_room_type()
+  roomtype={}
 
-  def self.room_types
-    puts "Total number of room types we have =#{@@no_of_room_types}"
-  end
+  puts "In order to add room type please enter the details"
+  print "Enter Room Type Id: "
+  roomtype[:room_type_id] = gets.chomp
 
-  def self.add_room_type
-    puts "In order to add a room type, please enter the details:"
-    print "Enter Room Type: "
-    room_type = gets.chomp
+  print "Enter Hotel Id: "
+  roomtype[:hotel_id] = gets.chomp
 
-    print "Enter Room Number: "
-    room_no = gets.chomp
+  print "Enter Room Image: "
+  roomtype[:room_img] = gets.chomp
 
-    print "Enter Room Price: "
-    room_price = gets.chomp
+  print "Enter Room Description: "
+  roomtype[:room_desc] = gets.chomp
 
-    print "Enter Room Image: "
-    room_img = gets.chomp
+  print "Enter Room Facilities: "
+  roomtype[:room_facilities] = gets.chomp
 
-    print "Enter Room Description: "
-    room_desc = gets.chomp
+  @@room_types << roomtype
+  @@no_of_room_types += 1
 
-    print "Enter Room Facilities: "
-    room_facilities = gets.chomp
+  room_type_details(roomtype)
+end
 
-    roomtype = Roomtype.new(room_type, room_no, room_price, room_img, room_desc, room_facilities)
-    @@room_types << roomtype
-    puts "Room Type #{room_type} has been added successfully."
-  end
-
-  def self.delete_room_type
-    print "Enter the name of the room type to delete: "
-    room_type = gets.chomp
-
-    roomtype = @@room_types.find { |rt| rt.instance_variable_get(:@room_type) == room_type }
-
-    if roomtype
-      @@room_types.delete(roomtype)
-      puts "Room Type #{room_type} has been deleted successfully."
-    else
-      puts "No room type found with the given name."
+def list_room_types()
+  if (@@room_types.length>0 && $selected_hotel != nil)
+  puts "\n\nList of all Room Types:"
+  found_room_types=@@room_types.select { |roomtype| roomtype[:hotel_id].include?($selected_hotel[:hotel_id])}
+  found_room_types.each do |roomtype|
+    puts "\nRoom Type Id: #{roomtype[:room_type_id]}"
+    puts "Room Image: #{roomtype[:room_img]}"
+    puts "Room Description: #{roomtype[:room_desc]}"
+    puts "Room Facilities: #{roomtype[:room_facilities]}"
     end
+  else
+    puts "\nCurrently no room types available, Please try again later!"
   end
+end
 
-  def self.search_room_type
-    print "Enter the name of the room type to search: "
-    room_type = gets.chomp
+def delete_room_type()
+  print "Enter the ID of the Room Type to delete: "
+  room_type_id = gets.chomp
 
-    found_room_types = @@room_types.select { |rt| rt.instance_variable_get(:@room_type).downcase.include?(room_type.downcase) }
+  index = @@room_types.find_index { |roomtype| roomtype[:room_type_id] == room_type_id}
 
-    if found_room_types.length > 0
-      puts "\nFound room types:"
+  if index != nil
+    @@room_types.delete_at(index)
+    @@no_of_room_types -= 1
+    puts "Room type with ID #{room_type_id} has been deleted."
+  else
+    puts "No Room Type found with ID #{room_type_id}."
+  end
+end
 
-      found_room_types.each do |rt|
-        rt.roomtype_details
-      end
-    else
-      puts "\nNo room types found with the given name."
+
+def search_room_type_by_id()
+  print "Enter the ID of room type to search: "
+  search_room_type = gets.chomp
+
+  found_room_type = @@room_types.select { |roomtype| roomtype[:room_type_id].include?(search_room_type) }
+
+  if found_room_type.length > 0
+    puts "\n\nFound Room Type:"
+
+    found_room_type.each do |roomtype|
+      room_type_details(roomtype)
     end
+  else
+    puts "\n\nNo room type found with the given ID."
   end
-  
-  def modify_room_type()
-    puts "\nEnter the room type to modify: "
-    room_type = gets.chomp
+end
 
-    index = @@room_types.find_index { |type| type[:room_type] == room_type }
+def select_room_type()
+  print "Enter the ID of the room type to select: "
+  room_type_id = gets.chomp
 
-    if index != nil
-      room = @@room_types[index]
+  $selected_room_type= @@room_types.find { |roomtype| roomtype[:room_type_id]== room_type_id }
 
-      puts "\nEnter the new details for the room type #{room_type}:"
+  if $selected_room_type != nil
+    puts "\n\nSelected room type is:"
+    room_type_details($selected_room_type)
+  else
+    puts "\n\nNo room type found with ID #{$selected_room_type}."
+  end
+end
 
-      print "Room Number (#{room[:room_no]}): "
-      new_no = gets.chomp
-      room[:room_no] = new_no unless new_no.strip.empty?
 
-      print "Room Price (#{room[:room_price]}): "
-      new_price = gets.chomp
-      room[:room_price] = new_price unless new_price.strip.empty?
+def start(object1)
+  while true
+    puts "\n\nWhat do you want to do?"
+    puts "1. Add Room Type"
+    puts "2. Total Number Of Room Types"
+    puts "3. List all Room Types"
+    puts "4. Search room type by ID"
+    puts "5. Delete Room Type by ID"
+    puts "6. Select Room Type by ID"
+    puts "7. Quit"
 
-      print "Room Image (#{room[:room_img]}): "
-      new_img = gets.chomp
-      room[:room_img] = new_img unless new_img.strip.empty?
+    choice = gets.chomp.to_i
 
-      print "Room Description (#{room[:room_desc]}): "
-      new_desc = gets.chomp
-      room[:room_desc] = new_desc unless new_desc.strip.empty?
-
-      print "Room Facilities (#{room[:room_facilities]}): "
-      new_fac = gets.chomp
-      room[:room_facilities] = new_fac unless new_fac.strip.empty?
-
-      puts "\nRoom type details updated:"
-      roomtype_details(room)
+    case choice
+    when 1
+      object1.add_room_type
+    when 2
+      object1.total_no_of_room_types
+    when 3
+      object1.list_room_types
+    when 4
+      object1.search_room_type_by_id
+    when 5
+      object1.delete_room_type
+    when 6
+      object1.select_room_type
+      break
+    when 7
+      break
     else
-      puts "\nNo room type found with the given name."
+      puts "Invalid choice. Please try again."
     end
   end
 end
+end
+object1=Roomtype.new
+object1.start(object1)
