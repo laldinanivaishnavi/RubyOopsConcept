@@ -130,7 +130,7 @@ def start(object1)
       object1.delete_room_type
     when 6
       object1.select_room_type
-      if $selected_room_type.length() > 0
+      if $selected_room_type!=nil
         break
       else
         puts "Enter valid ID"

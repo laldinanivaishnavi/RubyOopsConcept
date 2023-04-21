@@ -145,7 +145,12 @@ def start(object1)
       object1.delete_hotel
     when 6
       object1.select_hotel
-      break
+      if $selected_hotel!=nil
+        break
+      else
+        puts "Enter valid ID"
+        object1.select_hotel
+      end
     when 7
       break
     else

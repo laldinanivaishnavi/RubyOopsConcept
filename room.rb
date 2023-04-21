@@ -78,7 +78,7 @@ class Room
       puts "No Room found with Room No. #{room_no}."
     end
   end
-=begin
+
   def search_room_by_no
     print "Enter the Room No. to search: "
     search_room = gets.chomp
@@ -99,7 +99,7 @@ class Room
       puts "\n\nNo room found with the given Room No."
     end
   end
-=end
+
 def allot_room_no
   print "Checking form the availability of selected room type: "
 
@@ -109,9 +109,6 @@ def allot_room_no
     found_rooms = available_rooms.select { |room| room[:room_type_id].include?($selected_room_type[:room_type_id]) }
     
     if found_rooms.length > 0
-      #puts "\n\nFound Rooms with selected Room Type:"
-      p#uts "#{found_rooms}"
-      
       alloted_room = found_rooms.sample
       puts "\nCongratulations! you have been alloted Room No. #{alloted_room[:room_no]}"
       room_details(alloted_room)
@@ -133,7 +130,8 @@ end
       puts "3. List all Rooms"
       puts "4. Delete Room"
       puts "5. Allot Room Number"
-      puts "6. Quit"
+      puts "6. Search Room Number"
+      puts "7. Quit"
   
       choice = gets.chomp.to_i
   
@@ -150,6 +148,8 @@ end
         object1.allot_room_no
         break
       when 6
+        object1.search_room_by_no
+      when 7
         break
       else
         puts "Invalid choice. Please try again."
