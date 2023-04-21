@@ -99,7 +99,7 @@ def select_room_type()
     puts "\n\nSelected room type is:"
     room_type_details($selected_room_type)
   else
-    puts "\n\nNo room type found with ID #{$selected_room_type}."
+    puts "\n\nNo room type found with ID #{room_type_id}."
   end
 end
 
@@ -130,7 +130,12 @@ def start(object1)
       object1.delete_room_type
     when 6
       object1.select_room_type
-      break
+      if $selected_room_type.length() > 0
+        break
+      else
+        puts "Enter valid ID"
+        object1.select_room_type
+      end
     when 7
       break
     else

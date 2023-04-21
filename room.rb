@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require './hotel.rb'
-require './roomtype'
+require './roomtype.rb'
 class Room
   @@no_of_rooms = 0
   @@rooms = []
@@ -10,7 +10,7 @@ class Room
   end
   
   def room_details(room)
-    puts "\n\n#{room[:room_no]} is in our list:"
+    puts "\n\nRoom No. #{room[:room_no]} Details are:"
     puts "Room No. - #{room[:room_no]}"
     puts "Room Type Id - #{room[:room_type_id]}"
     puts "Hotel Id- #{room[:hotel_id]}"
@@ -100,24 +100,31 @@ class Room
     end
   end
 =end
-  def allot_room_no
-    print "Checking for the availability of selected room type: "
-    if $selected_room_type != nil
-      found_rooms=@@rooms.select { |room| room[:room_type_id].include?($selected_room_type[:room_type_id]) if { |room| room[:room_occupancy] =="Available" }end}end
-      if found_rooms.length > 0
-        puts "\n\nFound Rooms with selected Room Type:"
-    
-        found_rooms.each do |room|
-          room_details(room)
-        end
-      else
-        puts "\n\nNo room type found with the selected room type."
-      end
-    else
-      puts "\n\nWe can't proceed with the requested room type, Kindly select another or Try Again Later!"
-    end
-  end
+def allot_room_no
+  print "Checking form the availability of selected room type: "
 
+  available_rooms = @@rooms.select { |room| room[:room_occupancy] == "Available" }
+  
+  if available_rooms.length > 0 && $selected_room_type != nil
+    found_rooms = available_rooms.select { |room| room[:room_type_id].include?($selected_room_type[:room_type_id]) }
+    
+    if found_rooms.length > 0
+      #puts "\n\nFound Rooms with selected Room Type:"
+      p#uts "#{found_rooms}"
+      
+      alloted_room = found_rooms.sample
+      puts "\nCongratulations! you have been alloted Room No. #{alloted_room[:room_no]}"
+      room_details(alloted_room)
+    else
+      puts "\n\nNo rooms found with the selected room type."
+    end
+  else
+    puts "\n\nWe can't proceed with the requested room type, kindly select another or try again later!"
+  end
+end
+
+
+    
   def start(object1)
     while true
       puts "\n\nWhat do you want to do?"
@@ -141,6 +148,7 @@ class Room
         object1.delete_room
       when 5
         object1.allot_room_no
+        break
       when 6
         break
       else
