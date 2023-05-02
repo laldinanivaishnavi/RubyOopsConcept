@@ -1,10 +1,7 @@
-#!/usr/bin/env ruby
-require './hotel.rb'
-require './roomtype.rb'
+$alloted_room=[]
 class Room
   @@no_of_rooms = 0
-  @@rooms = []
-
+  @@rooms = [{room_no:"1",room_type_id:"1",hotel_id:"1",room_occupancy:"Available",room_status:"Clean"}]
   def total_no_of_rooms()
     puts "Total number of Room: #{@@no_of_rooms}" 
   end
@@ -109,9 +106,9 @@ def allot_room_no
     found_rooms = available_rooms.select { |room| room[:room_type_id].include?($selected_room_type[:room_type_id]) }
     
     if found_rooms.length > 0
-      alloted_room = found_rooms.sample
-      puts "\nCongratulations! you have been alloted Room No. #{alloted_room[:room_no]}"
-      room_details(alloted_room)
+      $alloted_room= found_rooms.sample
+      puts "\nCongratulations! you have been alloted Room No. #{$alloted_room[:room_no]}"
+      room_details($alloted_room)
     else
       puts "\n\nNo rooms found with the selected room type."
     end
@@ -120,17 +117,37 @@ def allot_room_no
   end
 end
 
+def user_room(object1)
+    while true
+      puts "\n\nType 1 to get your room alloted, Type 2 to Quit!"
+      puts "1. Allot Room Number"
+      puts "2. Quit"
+  
+      choice = gets.chomp.to_i
+  
+      case choice
+      when 1
+        object1.allot_room_no
+        if $alloted_room!=nil
+          break
+        end
+      when 2
+        exit
+      else
+        puts "Invalid choice. Please try again."
+      end
+    end
+  end
 
-    
-  def start(object1)
+def admin_room(object1)
     while true
       puts "\n\nWhat do you want to do?"
       puts "1. Add Room"
       puts "2. Total Number Of Room"
       puts "3. List all Rooms"
       puts "4. Delete Room"
-      puts "5. Allot Room Number"
-      puts "6. Search Room Number"
+      puts "5. Search Room Number"
+      puts "6. Proceed To Guest"
       puts "7. Quit"
   
       choice = gets.chomp.to_i
@@ -145,19 +162,15 @@ end
       when 4
         object1.delete_room
       when 5
-        object1.allot_room_no
-        break
-      when 6
         object1.search_room_by_no
-      when 7
+      when 6
         break
+      when 7
+        exit
       else
         puts "Invalid choice. Please try again."
       end
     end
   end
-  end
-  object1=Room.new
-  object1.start(object1)
-
+end
 

@@ -1,7 +1,10 @@
+$user_type=0
+$userid=0
 class Login
 
-def validate_user(username,password)
-    if username=="user" && password=="user"
+def validate_user(user_id,username,password)
+    if user_id.between?(1,1000) && username=="user" && password=="user"
+        $userid=user_id
         return 1
     else 
         return 0
@@ -25,13 +28,17 @@ def login(object1)
         case choice
         when 1
             puts "For Login as user ,Kindly enter below credentials: "
-            puts "Enter Username"
+            puts "Enter User Id: "
+            user_id=gets.chomp.to_i
+            puts "Enter Username: "
             username=gets.chomp
-            puts "Enter Password"
+            puts "Enter Password: "
             password=gets.chomp
-            validated=object1.validate_user(username,password)
+            validated=object1.validate_user(user_id,username,password)
             if validated==1
                 puts "User Logged In Successfully!"
+                $user_type=1
+                break
             elsif validated==0
                 puts "Oops! Invalid Credentials"
             end
@@ -44,11 +51,13 @@ def login(object1)
             validated=object1.validate_admin(username,password)
             if validated==1
                 puts "Admin Logged In Successfully!"
+                $user_type=2
+                break
             elsif validated==0
                 puts "Oops! Invalid Credentials"
             end
         when 3
-            break
+            exit
         else
             puts "Invalid Choice, Please Try Again!"
         end
@@ -56,5 +65,3 @@ def login(object1)
 end
 end
 
-object1=Login.new
-object1.login(object1)

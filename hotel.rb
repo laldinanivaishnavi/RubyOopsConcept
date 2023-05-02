@@ -1,7 +1,7 @@
 $selected_hotel=[]
 class Hotel
     @@no_of_hotels=0
-    @@hotels=[]
+    @@hotels=[{hotel_id:"1",hotel_name:"Red Fox",hotel_address:"Sector 55",hotel_postalcode:"122001",hotel_city:"Gurgaon",hotel_country:"India",hotel_numofrooms:"1000",hotel_phoneno:"9898008989",hotel_starrating:"4"}]
 def total_no_of_hotels()
   puts "Total number of Hotels: #{@@no_of_hotels}" 
 end
@@ -109,8 +109,7 @@ def select_hotel()
   hotel_id = gets.chomp
 
   $selected_hotel = @@hotels.find { |hotel| hotel[:hotel_id] == hotel_id }
-
-  if $selected_hotel != nil
+  if $selected_hotel!=nil
     puts "\n\nSelected hotel:"
     hotel_details($selected_hotel)
   else
@@ -118,16 +117,48 @@ def select_hotel()
   end
 end
 
-
-def start(object1)
+def user_hotel(object1)
   while true
-    puts "\n\nWhat do you want to do?"
+    puts "\n\nWelcome to the portal User!"
+    puts "You are few clicks away to get a 5 star experience with us:"
+    puts "1. List all hotels"
+    puts "2. Search hotel by name"
+    puts "3. Select Hotel by ID"
+    puts "4. Quit"
+
+    choice = gets.chomp.to_i
+
+    case choice
+    when 1
+      object1.list_hotels
+    when 2
+      object1.search_hotel_by_name
+    when 3
+      object1.select_hotel
+      if $selected_hotel!=nil
+        break
+      else
+        puts "Enter valid ID"
+        object1.select_hotel
+      end
+    when 4
+      exit
+    else
+      puts "Invalid choice. Please try again."
+    end
+  end   
+end
+
+def admin_hotel(object1)
+  while true
+    puts "\n\nWelcome to the portal Admin!"
+    puts "What do you want to do?"
     puts "1. Add hotel"
     puts "2. Total Number Of Hotels"
     puts "3. List all hotels"
     puts "4. Search hotel by name"
     puts "5. Delete hotel by ID"
-    puts "6. Select Hotel by ID"
+    puts "6. Proceed to Room Type"
     puts "7. Quit"
 
     choice = gets.chomp.to_i
@@ -144,20 +175,13 @@ def start(object1)
     when 5
       object1.delete_hotel
     when 6
-      object1.select_hotel
-      if $selected_hotel!=nil
-        break
-      else
-        puts "Enter valid ID"
-        object1.select_hotel
-      end
-    when 7
       break
+    when 7
+      exit
     else
       puts "Invalid choice. Please try again."
     end
   end
 end
 end
-object1=Hotel.new
-object1.start(object1)
+

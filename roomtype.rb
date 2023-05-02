@@ -2,7 +2,7 @@ require './hotel.rb'
 $selected_room_type=[]
 class Roomtype
     @@no_of_room_types=0
-    @@room_types=[]
+    @@room_types=[{room_type_id:"1",hotel_id:"1",room_img:"room.jpg",room_desc:"Junior Suite",room_facilities:"Wi-fi,Smoky"}]
 
 def total_no_of_room_types()
   puts "Total number of Room Types: #{@@no_of_room_types}" 
@@ -103,8 +103,38 @@ def select_room_type()
   end
 end
 
+def user_roomtype(object1)
+  while true
+    puts "\n\nChoose your Room Type:"
+    puts "1. List all Room Types"
+    puts "2. Search room type by ID"
+    puts "3. Select Room Type by ID"
+    puts "4. Quit"
 
-def start(object1)
+    choice = gets.chomp.to_i
+
+    case choice
+    when 1
+      object1.list_room_types
+    when 2
+      object1.search_room_type_by_id
+    when 3
+      object1.select_room_type
+      if $selected_room_type!=nil
+        break
+      else
+        puts "Enter valid ID"
+        object1.select_room_type
+      end
+    when 4
+      exit
+    else
+      puts "Invalid choice. Please try again."
+    end
+  end   
+end
+
+def admin_roomtype(object1)
   while true
     puts "\n\nWhat do you want to do?"
     puts "1. Add Room Type"
@@ -112,7 +142,7 @@ def start(object1)
     puts "3. List all Room Types"
     puts "4. Search room type by ID"
     puts "5. Delete Room Type by ID"
-    puts "6. Select Room Type by ID"
+    puts "6. Proceed to Room"
     puts "7. Quit"
 
     choice = gets.chomp.to_i
@@ -129,20 +159,14 @@ def start(object1)
     when 5
       object1.delete_room_type
     when 6
-      object1.select_room_type
-      if $selected_room_type!=nil
-        break
-      else
-        puts "Enter valid ID"
-        object1.select_room_type
-      end
-    when 7
       break
+    when 7
+      exit 
     else
       puts "Invalid choice. Please try again."
     end
   end
 end
+    
 end
-object1=Roomtype.new
-object1.start(object1)
+
